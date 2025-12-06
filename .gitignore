@@ -1,0 +1,26 @@
+# === OS ===
+.DS_Store
+Thumbs.db
+
+# === ENV / secrets ===
+.env
+*.log
+
+# === Node ===
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# === Build ===
+frontend/build/
+frontend/dist/
+backend/database.sqlite       # baza se ne gura
+*.sqlite
+*.sqlite3
+
+# === IDE ===
+.vscode/
+.idea/
+*.swp
+*.swo
