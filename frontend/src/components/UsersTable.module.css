@@ -1,0 +1,9 @@
+.grid {
+  display: grid;
+  gap: 16px;
+}
+.empty {
+  text-align: center;
+  color: #546e7a;
+  margin-top: 40px;
+}

@@ -1,0 +1,75 @@
+.wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+}
+.card {
+  width: 100%;
+  max-width: 960px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 32px 40px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+}
+.title {
+  font-weight: 600;
+  font-size: 2rem;
+  margin-bottom: 24px;
+  text-align: center;
+  color: #01579b;
+}
+.toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.search,
+.select,
+.toggle {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.4);
+  font-size: 0.95rem;
+  transition: background 0.2s;
+}
+.search:focus,
+.select:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.6);
+}
+.toggle {
+  cursor: pointer;
+  font-weight: 500;
+}
+.toggle:hover {
+  background: rgba(255, 255, 255, 0.6);
+}
+/************ DUGMIĆI U TOOLBARU ************/
+.addBtn {
+  margin-right: auto;                   /* drži ga levo */
+  background: rgba(2, 136, 209, 0.85);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 10px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  backdrop-filter: blur(4px);
+}
+.addBtn:hover {
+  background: rgba(2, 136, 209, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(2, 136, 209, 0.25);
+}
+.addBtn:active {
+  transform: translateY(0);
+}

@@ -1,0 +1,6 @@
+.backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; z-index: 10; }
+.box { background: #fff; border-radius: 16px; padding: 28px 32px; width: 360px; display: flex; flex-direction: column; gap: 12px; }
+.input { padding: 10px 14px; border: 1px solid #ccd1d9; border-radius: 8px; font-size: .95rem; }
+.actions { display: flex; gap: 12px; margin-top: 8px; }
+.save { flex: 1; background: #0288d1; color: #fff; border: none; padding: 10px; border-radius: 8px; cursor: pointer; }
+.cancel { flex: 1; background: #e0e0e0; border: none; padding: 10px; border-radius: 8px; cursor: pointer; }
