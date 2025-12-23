@@ -6,16 +6,33 @@ export default function UserDetails({ userId, onPolicyRemoved }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    getUser(userId).then(setUser).catch(console.error);
+    getUser(userId)
+      .then((u) => {
+        const mappedUser = {
+          ...u,
+          policies: u.Policies || [],
+        };
+        setUser(mappedUser);
+      })
+      .catch(console.error);
   }, [userId]);
 
   const handleRemove = async (policyId) => {
-    await removeUserPolicy(userId, policyId);
-    setUser((prev) => ({
-      ...prev,
-      Policies: prev.Policies.filter((p) => p.id !== policyId),
-    }));
-    onPolicyRemoved?.(userId, policyId);
+    try {
+      await removeUserPolicy(userId, policyId);
+
+      const updatedUser = {
+        ...user,
+        policies: user.policies.filter((p) => p.id !== policyId),
+      };
+
+      setUser(updatedUser);
+
+      // obaveštavamo roditelja (UserRow)
+      onPolicyRemoved?.(policyId);
+    } catch (err) {
+      console.error('Greška pri uklanjanju polise', err);
+    }
   };
 
   if (!user) return <p className={styles.loading}>Učitavanje...</p>;
@@ -48,14 +65,14 @@ export default function UserDetails({ userId, onPolicyRemoved }) {
 
       <h4 className={styles.subHeading}>Polise</h4>
 
-      {user.Policies?.length ? (
+      {user.policies?.length ? (
         <ul className={styles.list}>
-          {user.Policies.map((p) => (
+          {user.policies.map((p) => (
             <li key={p.id} className={styles.item}>
               <div className={styles.left}>
                 <span className={styles.policyName}>{p.name}</span>
                 <span className={styles.price}>
-                  {Number(p.monthlyRate).toFixed(2)} RSD/mes
+                  {Number(p.monthlyRate || 0).toFixed(2)} RSD/mes
                 </span>
               </div>
               <button

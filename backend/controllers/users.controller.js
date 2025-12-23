@@ -4,10 +4,10 @@ const { User, Policy, UserPolicy } = require('../models');
 exports.getAllUsers = async (req, res, next) => {
   try {
     const users = await User.findAll({
-      attributes: ['id', 'firstName', 'lastName'],
+       attributes: ['id', 'firstName', 'lastName', 'gender', 'avatar', 'birthDate', 'address', 'phone', 'email'],
       order: [['lastName', 'ASC']],
     });
-    res.json(users);
+    res.json(users.map(u => u.toJSON()));
   } catch (err) {
     next(err);
   }
@@ -16,6 +16,7 @@ exports.getAllUsers = async (req, res, next) => {
 exports.getUserById = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id, {
+      attributes: ['id', 'firstName', 'lastName', 'gender', 'avatar', 'birthDate', 'address', 'phone', 'email'],
       include: {
         model: Policy,
         through: { attributes: [] },
@@ -27,6 +28,31 @@ exports.getUserById = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.uploadAvatar = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User nije pronađen' });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    user.avatar = `/uploads/avatars/${req.file.filename}`;
+    await user.save();
+
+    res.json({
+      message: 'Avatar updated successfully',
+      avatar: user.avatar
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Avatar upload failed', error });
+  }
+};
+
 
 
 exports.createUser = async (req, res, next) => {

@@ -1,10 +1,5 @@
-// frontend/src/pages/UserPage.js  (ili UsersPage.js – kako si nazvao fajl)
 import { useEffect, useMemo, useState } from 'react';
-import {
-  getUsers,
-  getPolicies,
-  deleteUser,
-} from '../api/api';
+import { getUsers, getPolicies, deleteUser } from '../api/api';
 import UsersTable from '../components/UsersTable';
 import AddUserModal from '../components/AddUserModal';
 import ConfirmDeleteModal from '../components/ConfirmDeleteModal';
@@ -17,11 +12,9 @@ export default function UsersPage() {
   const [sortKey, setSortKey] = useState('lastName'); 
   const [asc, setAsc] = useState(true);
 
-  
   const [showAdd, setShowAdd] = useState(false);
   const [showDel, setShowDel] = useState(null); 
 
-  
   useEffect(() => {
     Promise.all([getUsers(), getPolicies()])
       .then(([u, p]) => {
@@ -31,7 +24,6 @@ export default function UsersPage() {
       .catch(console.error);
   }, []);
 
-  
   const filtered = useMemo(() => {
     let list = users.filter(u =>
       `${u.firstName} ${u.lastName}`.toLowerCase().includes(search.toLowerCase())
@@ -44,31 +36,29 @@ export default function UsersPage() {
     return list;
   }, [users, search, sortKey, asc]);
 
-  
   const handleAdd = (newUser) => setUsers([...users, newUser]);
 
   const handleDelete = async () => {
     await deleteUser(showDel.id);
-    setUsers(users.filter(u => u.id !== showDel.id));
+    setUsers(prev => prev.filter(u => u.id !== showDel.id));
     setShowDel(null);
   };
 
- // const handlePolicyRemoved = (userId, policyId) => {
-    // ako želiš da osvežiš ceo red (npr. badge) – ovde možeš pozvati getUsers()
-    // za sada radimo optimistički (već skinuto iz state-a u UserDetails)
- // };
+  // callback za ažuriranje jednog korisnika (npr. kada uklonimo polisu)
+  const handleUserUpdate = (updatedUser) => {
+    setUsers(prev => Array.isArray(prev) 
+      ? prev.map(u => u.id === updatedUser.id ? updatedUser : u)
+      : []
+    );
+  };
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.card}>
         <h1 className={styles.title}>Osiguranje</h1>
 
-        {/* toolbar */}
         <div className={styles.toolbar}>
-          <button
-            onClick={() => setShowAdd(true)}
-            className={styles.addBtn}
-          >
+          <button onClick={() => setShowAdd(true)} className={styles.addBtn}>
             + Dodaj korisnika
           </button>
 
@@ -89,30 +79,19 @@ export default function UsersPage() {
             <option value="birthDate">Datum rođenja</option>
           </select>
 
-          <button
-            onClick={() => setAsc((a) => !a)}
-            className={styles.toggle}
-          >
+          <button onClick={() => setAsc(a => !a)} className={styles.toggle}>
             {asc ? 'A-Z ↑' : 'Z-A ↓'}
           </button>
         </div>
 
-        {/* tabela / grid */}
         <UsersTable
           users={filtered}
           policies={policies}
-          setUsers={setUsers}
+          onUserUpdate={handleUserUpdate}
           onDeleteClick={(user) => setShowDel(user)}
         />
 
-        {/* modals */}
-        {showAdd && (
-          <AddUserModal
-            onClose={() => setShowAdd(false)}
-            onAdd={handleAdd}
-          />
-        )}
-
+        {showAdd && <AddUserModal onClose={() => setShowAdd(false)} onAdd={handleAdd} />}
         {showDel && (
           <ConfirmDeleteModal
             userName={`${showDel.firstName} ${showDel.lastName}`}

@@ -4,7 +4,7 @@ const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize({
   dialect: 'sqlite',
-  storage: 'database.sqlite',   // fajl će se kreirati u backend/
+  storage: 'database.sqlite',   
   logging: false,
 });
 

@@ -18,7 +18,7 @@ const User = sequelize.define('User', {
     birthDate: {
         type: DataTypes.DATEONLY,
     },
-    adress: {
+    address: {
         type: DataTypes.STRING(100),
     },
     phone: {
@@ -27,9 +27,38 @@ const User = sequelize.define('User', {
     email: {
         type: DataTypes.STRING(50),
     },
+    gender: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'male'
+    },
+    avatar: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    }
 },{
     tableName: 'users',
     timestamps: false,
+});
+
+// Hook koji dodeljuje default avatar pre kreiranja jednog korisnika
+User.beforeCreate(user => {
+    if (!user.avatar) {
+        user.avatar = user.gender === 'female'
+            ? '/uploads/avatars/default_female.png'
+            : '/uploads/avatars/default_male.png';
+    }
+});
+
+// Hook koji dodeljuje default avatar pre bulk kreiranja korisnika
+User.beforeBulkCreate(users => {
+    users.forEach(user => {
+        if (!user.avatar) {
+            user.avatar = user.gender === 'female'
+                ? '/uploads/avatars/default_female.png'
+                : '/uploads/avatars/default_male.png';
+        }
+    });
 });
 
 module.exports = User;

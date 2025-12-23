@@ -12,6 +12,8 @@ app.use(express.json());
 
 app.use('/api/users', usersRoutes);
 app.use('/api/policies', policiesRoutes);
+app.use('/uploads', express.static('uploads'));
+
 
 app.use((err, req, res, next) => {
   console.error(err);
